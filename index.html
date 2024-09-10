@@ -112,9 +112,7 @@
     }
   </style>
 </head>
-
 <body>
-
 <svg id="logo" viewBox="0 0 270 90">
   <rect x="0" y="0" width="270" height="90" fill="rgba(0, 0, 51, 0.7)" rx="10" ry="10"/>
   <text x="20" y="50" font-size="24" fill="#FFD700">Banana Consultants</text>
@@ -247,10 +245,31 @@
       });
     }
 
-    update() {
+    static checkCollision(banana1, banana2) {
+      const dx = banana1.x - banana2.x;
+      const dy = banana1.y - banana2.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      return distance < 60; // Assuming banana width is 60px
+    }
+
+    update(otherBananas) {
       this.x += this.vx;
       this.y += this.vy;
 
+      // Check for collisions with other bananas
+      otherBananas.forEach(otherBanana => {
+        if (otherBanana !== this && Banana.checkCollision(this, otherBanana)) {
+          // Simple collision response
+          const tempVx = this.vx;
+          const tempVy = this.vy;
+          this.vx = otherBanana.vx;
+          this.vy = otherBanana.vy;
+          otherBanana.vx = tempVx;
+          otherBanana.vy = tempVy;
+        }
+      });
+
+      // Bounce off walls
       if (this.x <= 0 || this.x >= window.innerWidth - 60) {
         this.vx = -this.vx;
       }
@@ -270,7 +289,7 @@
   const bananasArray = Array.from({length: numberOfBananas}, () => new Banana());
 
   function animate() {
-    bananasArray.forEach(banana => banana.update());
+    bananasArray.forEach(banana => banana.update(bananasArray));
     requestAnimationFrame(animate);
   }
 
@@ -286,7 +305,5 @@
   // Helper function to clamp a value between a min and max
   Math.clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 </script>
-
 </body>
-
 </html>
