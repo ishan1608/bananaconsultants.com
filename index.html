@@ -22,7 +22,15 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      background: linear-gradient(to bottom, #000033, #000066);
+      background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%),
+      repeating-radial-gradient(circle at center,
+        rgba(255, 255, 255, 0) 0px,
+        rgba(255, 255, 255, 0) 40px,
+        rgba(255, 255, 255, 0.03) 41px,
+        rgba(255, 255, 255, 0) 42px
+      ),
+      linear-gradient(to bottom, #000033, #000066);
+      background-size: 100% 100%, 100% 100%, 100% 100%;
       overflow: hidden;
       color: #FFD700;
       font-family: Arial, sans-serif;
@@ -247,7 +255,11 @@
     }
   }
 
-  const bananasArray = Array.from({length: 5}, () => new Banana());
+  const minBananas = 5;
+  const maxBananas = 10;
+  const numberOfBananas = Math.floor(Math.random() * (maxBananas - minBananas + 1)) + minBananas;
+
+  const bananasArray = Array.from({length: numberOfBananas}, () => new Banana());
 
   function animate() {
     bananasArray.forEach(banana => banana.update());
