@@ -16,7 +16,6 @@
     <style>
         body {
             margin: 0;
-            padding: 0;
             height: 100vh;
             display: flex;
             flex-direction: column;
@@ -34,13 +33,15 @@
             overflow: hidden;
             color: #FFD700;
             font-family: Arial, sans-serif;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
         #logo {
             position: absolute;
             top: 20px;
             left: 20px;
-            width: 270px;
+            width: 200px;
             z-index: 30;
         }
 
@@ -54,29 +55,12 @@
             z-index: 20;
         }
 
-        .banana {
-            position: absolute;
-            width: 60px;
-            height: 60px;
-            cursor: grab;
-            transition: all 0.5s ease-out;
-            pointer-events: auto;
-        }
-
-        .banana:hover {
-            cursor: pointer;
-        }
-
-        .banana:active {
-            cursor: grabbing;
-        }
-
         #contact {
             position: absolute;
             top: 20px;
             right: 20px;
-            padding: 10px 20px;
-            font-size: 16px;
+            padding: 8px 16px;
+            font-size: 14px;
             background-color: #FFD700;
             color: #000066;
             border: none;
@@ -87,18 +71,78 @@
             display: inline-block;
         }
 
+        @media (max-width: 768px) {
+            #logo {
+                width: 150px;
+                top: 10px;
+                left: 10px;
+            }
+
+            #contact {
+                top: 10px;
+                right: 10px;
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #logo {
+                width: 120px;
+            }
+
+            #contact {
+                padding: 5px 10px;
+                font-size: 11px;
+            }
+        }
+
+        .banana {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            cursor: grab;
+            transition: all 0.5s ease-out;
+            pointer-events: auto;
+        }
+
+        @media (max-width: 768px) {
+            .banana {
+                width: 50px;
+                height: 50px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .banana {
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        .banana:hover {
+            cursor: pointer;
+        }
+
+        .banana:active {
+            cursor: grabbing;
+        }
+
         #message {
             text-align: center;
             max-width: 600px;
+            width: 90%;
             padding: 20px;
             z-index: 10;
             background-color: rgba(0, 0, 51, 0.7);
             border-radius: 10px;
+            margin: 0 auto;
         }
 
         #message h1 {
             font-size: 2.5em;
             margin-bottom: 20px;
+            line-height: 1.2;
         }
 
         #message p {
@@ -109,6 +153,65 @@
         .highlight {
             color: #FFA500;
             font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            #message {
+                width: 95%;
+                padding: 15px;
+            }
+
+            #message h1 {
+                font-size: 2em;
+                margin-bottom: 15px;
+            }
+
+            #message p {
+                font-size: 0.9em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #message {
+                width: 100%;
+                padding: 10px;
+            }
+
+            #message h1 {
+                font-size: 1.5em;
+                margin-bottom: 10px;
+            }
+
+            #message p {
+                font-size: 0.8em;
+            }
+        }
+
+        @media (max-width: 360px) {
+            body {
+                padding: 10px;
+            }
+
+            #logo {
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                width: 100px;
+                margin: 0;
+            }
+
+            #contact {
+                position: static;
+                display: block;
+                width: 100%;
+                max-width: 200px;
+                margin: 10px auto;
+                text-align: center;
+            }
+
+            #message {
+                margin-top: 20px;
+            }
         }
     </style>
 </head>
@@ -202,8 +305,9 @@
             this.element = document.createElement('div');
             this.element.classList.add('banana');
             this.element.innerHTML = bananaSVG;
-            this.x = Math.random() * (window.innerWidth - 60);
-            this.y = Math.random() * (window.innerHeight - 60);
+            this.size = window.innerWidth <= 480 ? 40 : (window.innerWidth <= 768 ? 50 : 60);
+            this.x = Math.random() * (window.innerWidth - this.size);
+            this.y = Math.random() * (window.innerHeight - this.size);
 
             // Base speed
             const baseSpeed = 0.5;
@@ -254,7 +358,7 @@
             const dx = banana1.x - banana2.x;
             const dy = banana1.y - banana2.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
-            return distance < 60; // Assuming banana width is 60px
+            return distance < (banana1.size + banana2.size) / 2;
         }
 
         update(otherBananas, deltaTime) {
@@ -299,11 +403,13 @@
             });
 
             // Bounce off walls
-            if (this.x <= 0 || this.x >= window.innerWidth - 60) {
+            if (this.x <= 0 || this.x >= window.innerWidth - this.size) {
                 this.vx = -this.vx;
+                this.targetX = undefined;
             }
-            if (this.y <= 0 || this.y >= window.innerHeight - 60) {
+            if (this.y <= 0 || this.y >= window.innerHeight - this.size) {
                 this.vy = -this.vy;
+                this.targetY = undefined;
             }
 
             this.element.style.left = `${this.x}px`;
