@@ -326,32 +326,48 @@
             this.originalSpeed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
             this.collisionTime = 0;
             this.isColliding = false;
+
+            this.element.style.touchAction = 'none'; // Prevent scrolling while touching bananas
         }
 
         setupDragging() {
             let isDragging = false;
             let startX, startY;
 
-            this.element.addEventListener('mousedown', (e) => {
+            const startDrag = (e) => {
                 isDragging = true;
-                startX = e.clientX - this.x;
-                startY = e.clientY - this.y;
+                const clientX = e.clientX || e.touches[0].clientX;
+                const clientY = e.clientY || e.touches[0].clientY;
+                startX = clientX - this.x;
+                startY = clientY - this.y;
                 this.element.style.transition = 'none';
-            });
+            };
 
-            document.addEventListener('mousemove', (e) => {
+            const drag = (e) => {
                 if (isDragging) {
-                    this.x = e.clientX - startX;
-                    this.y = e.clientY - startY;
+                    const clientX = e.clientX || (e.touches ? e.touches[0].clientX : startX + this.x);
+                    const clientY = e.clientY || (e.touches ? e.touches[0].clientY : startY + this.y);
+                    this.x = clientX - startX;
+                    this.y = clientY - startY;
                     this.element.style.left = `${this.x}px`;
                     this.element.style.top = `${this.y}px`;
                 }
-            });
+            };
 
-            document.addEventListener('mouseup', () => {
+            const endDrag = () => {
                 isDragging = false;
                 this.element.style.transition = 'all 0.5s ease-out';
-            });
+            };
+
+            // Mouse events
+            this.element.addEventListener('mousedown', startDrag);
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('mouseup', endDrag);
+
+            // Touch events
+            this.element.addEventListener('touchstart', startDrag);
+            document.addEventListener('touchmove', drag);
+            document.addEventListener('touchend', endDrag);
         }
 
         static checkCollision(banana1, banana2) {
