@@ -272,3 +272,28 @@ body {
     font-size: 1.2em;
     color: #FFA500; /* Orange text color */
 }
+
+@media (max-width: 501px) {
+    #profiles {
+        flex-direction: column;
+        gap: 1em;
+    }
+
+    .profile-box {
+        width: 100%;
+        max-width: 280px;
+    }
+
+    .profile-image {
+        width: 120px;
+        height: 120px;
+    }
+
+    .profile-name {
+        font-size: 1.2em;
+    }
+
+    .profile-position {
+        font-size: 1em;
+    }
+}
