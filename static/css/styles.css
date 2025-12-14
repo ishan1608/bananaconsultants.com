@@ -36,12 +36,12 @@ body {
 }
 
 #logo {
-    width: 200px;
+    width: 2rem;
     height: auto;
     z-index: 30;
 }
 
-#about-link {
+.top-link {
     margin-left: 20px;
     color: #FFD700;
     text-decoration: none;
@@ -82,7 +82,7 @@ body {
         width: 150px;
     }
 
-    #about-link {
+    .top-link {
         margin-left: 0;
         margin-top: 10px;
         font-size: 16px;
@@ -106,7 +106,7 @@ body {
         width: 120px;
     }
 
-    #about-link {
+    .top-link {
         font-size: 14px;
     }
 
@@ -216,7 +216,7 @@ body {
         align-items: flex-start;
     }
 
-    #about-link {
+    .top-link {
         font-size: 12px; /* Reduce font size for very small screens */
     }
 
